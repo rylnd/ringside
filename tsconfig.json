@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "lib": ["es6"],
+    "jsx": "react",
+    "lib": ["dom", "es2015", "es2016"],
     "module": "commonjs",
     "target": "es5",
     "moduleResolution": "node",
@@ -22,5 +23,9 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "useBabel": true,
+    "useCache": true
+  }
 }

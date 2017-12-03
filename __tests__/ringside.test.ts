@@ -1,6 +1,5 @@
 'use strict';
 
-import 'jest';
 import { Ringside } from '../src';
 
 describe('Example', () => {

@@ -1,5 +1,3 @@
-'use strict';
-
 import { Ringside } from '../src';
 import { rectToDOMRect as rect } from '../src/utils';
 

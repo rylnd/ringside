@@ -17,7 +17,8 @@
     "coverage": "npm test -- --coverage --no-cache",
     "coverage:watch": "npm run coverage -- --watch",
     "prepare": "npm run build && npm test",
-    "release": "standard-version && npm pack"
+    "release": "standard-version && npm pack",
+    "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "keywords": [
     "rect",
@@ -31,6 +32,8 @@
   "author": "Ryland Herrick",
   "license": "MIT",
   "devDependencies": {
+    "@storybook/addon-knobs": "^3.2.17",
+    "@storybook/react": "^3.2.17",
     "@types/jest": "^20.0.7",
     "@types/node": "^8.0.24",
     "browserify": "^14.4.0",
@@ -38,6 +41,8 @@
     "dts-bundle": "^0.7.3",
     "jest": "^20.0.4",
     "prettier": "^1.8.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "standard-version": "^4.2.0",
     "ts-jest": "^20.0.10",
     "ts-loader": "^2.3.3",
@@ -49,7 +54,9 @@
     "webpack": "3.5.5",
     "webpack-node-externals": "^1.6.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "d3-scale": "^1.0.7"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rylnd/ringside.git"

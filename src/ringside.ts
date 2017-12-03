@@ -1,4 +1,3 @@
-class Ringside {
-}
+class Ringside {}
 
 export default Ringside;

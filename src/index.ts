@@ -1,1 +1,1 @@
-export { default as Ringside } from "./ringside";
+export { default as Ringside } from './ringside';

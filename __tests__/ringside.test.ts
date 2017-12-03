@@ -83,7 +83,7 @@ describe('Ringside', () => {
     });
 
     it('properly positions on the bottom', () => {
-      const bottom = ringside.bottom();
+      let bottom = ringside.bottom();
       expect(bottom.end.bottom).toEqual({
         fits: true,
         height,

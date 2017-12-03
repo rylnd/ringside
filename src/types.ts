@@ -10,28 +10,3 @@ export interface RectProps {
   x: number;
   y: number;
 }
-
-export type Orientation = 'top' | 'left' | 'bottom' | 'right';
-export type HAlignment = 'start' | 'center' | 'end';
-export type VAlignment = 'top' | 'middle' | 'bottom';
-
-export interface Positioned extends Partial<RectProps> {
-  fits: boolean;
-}
-
-export interface Lane extends Partial<RectProps> {
-  name: Orientation;
-}
-
-export interface PositionedSide {
-  start: Positioned;
-  center: Positioned;
-  end: Positioned;
-}
-
-export interface Ringside {
-  top(): PositionedSide;
-  right(): PositionedSide;
-  bottom(): PositionedSide;
-  left(): PositionedSide;
-}

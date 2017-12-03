@@ -1,13 +1,44 @@
-import {
-  DOMRect,
-  HAlignment,
-  Lane,
-  Orientation,
-  Positioned,
-  PositionedSide,
-  RectProps,
-  VAlignment,
-} from './types';
+import { DOMRect, RectProps } from './types';
+
+export type Orientation = 'top' | 'left' | 'bottom' | 'right';
+export type HAlignment = 'start' | 'center' | 'end';
+export type VAlignment = 'top' | 'middle' | 'bottom';
+
+export interface Positioned extends Partial<RectProps> {
+  fits: boolean;
+}
+
+export interface Lane extends Partial<RectProps> {
+  name: Orientation;
+}
+
+export interface HPositionedSide {
+  start: Positioned;
+  center: Positioned;
+  end: Positioned;
+}
+
+export interface VPositionedSide {
+  top: Positioned;
+  middle: Positioned;
+  bottom: Positioned;
+}
+
+export interface PositionedSide {
+  top: HPositionedSide;
+  middle: HPositionedSide;
+  bottom: HPositionedSide;
+  start: VPositionedSide;
+  center: VPositionedSide;
+  end: VPositionedSide;
+}
+
+interface Ringside {
+  top(): PositionedSide;
+  right(): PositionedSide;
+  bottom(): PositionedSide;
+  left(): PositionedSide;
+}
 
 class Ringside implements Ringside {
   public readonly topLane: Lane;

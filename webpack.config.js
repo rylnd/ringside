@@ -58,7 +58,8 @@ var webpack_opts = {
   target: 'node',
   output: {
     filename: libPath('index.js'),
-    libraryTarget: 'commonjs2'
+    library: 'ringside',
+    libraryTarget: 'umd'
   },
   resolve: {
     extensions: ['.ts', '.js'],

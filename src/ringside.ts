@@ -33,14 +33,14 @@ export interface PositionedSide {
   end: VPositionedSide;
 }
 
-interface Ringside {
+export interface RingsideInterface {
   top(): PositionedSide;
   right(): PositionedSide;
   bottom(): PositionedSide;
   left(): PositionedSide;
 }
 
-class Ringside implements Ringside {
+class Ringside implements RingsideInterface {
   public readonly topLane: Lane;
   public readonly rightLane: Lane;
   public readonly bottomLane: Lane;

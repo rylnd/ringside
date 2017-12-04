@@ -7,11 +7,11 @@ module.exports = {
     "src/**/*.ts"
   ],
   "coveragePathIgnorePatterns": [
-    "/__tests__/",
+    "/test/",
     "/node_modules/"
   ],
   "testEnvironment": "node",
-  "testRegex": "__tests__/.*\\.test\\.ts$",
+  "testRegex": "test/.*\\.test\\.ts$",
   "moduleFileExtensions": [
     "ts",
     "js",

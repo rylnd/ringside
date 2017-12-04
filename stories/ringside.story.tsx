@@ -18,16 +18,16 @@ Stories.add('Ringside', () => {
   };
 
   const padding = 20;
-  const boxHeight = number('Height', 10, sizeOptions);
-  const boxWidth = number('Width', 10, sizeOptions);
+  const boxHeight = number('Height', 40, sizeOptions);
+  const boxWidth = number('Width', 50, sizeOptions);
   const outerX = number('Outer X', 0, sizeOptions);
   const outerY = number('Outer Y', 0, sizeOptions);
-  const outerHeight = number('Outer Height', 100, sizeOptions);
-  const outerWidth = number('Outer Width', 100, sizeOptions);
-  const innerX = number('Inner X', 30, sizeOptions);
-  const innerY = number('Inner Y', 50, sizeOptions);
-  const innerHeight = number('Inner Height', 20, sizeOptions);
-  const innerWidth = number('Inner Width', 20, sizeOptions);
+  const outerHeight = number('Outer Height', 500, sizeOptions);
+  const outerWidth = number('Outer Width', 600, sizeOptions);
+  const innerX = number('Inner X', 150, sizeOptions);
+  const innerY = number('Inner Y', 200, sizeOptions);
+  const innerHeight = number('Inner Height', 100, sizeOptions);
+  const innerWidth = number('Inner Width', 200, sizeOptions);
 
   const ctx = {} as any;
   ctx.topShow = boolean('Top Lane', true);

@@ -1,6 +1,6 @@
 {
   "name": "ringside",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Positions a rectangle between inner and outer bounds",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

@@ -14,9 +14,10 @@ describe('Ringside', () => {
   let ringside: Ringside;
 
   beforeEach(() => {
-    outer = rect(0, 0, 100, 100);
-    inner = rect(30, 50, 20, 20);
-    height = width = 10;
+    outer = rect(0, 0, 500, 600);
+    inner = rect(150, 200, 100, 200);
+    height = 40;
+    width = 50;
 
     ringside = new Ringside(inner, outer, height, width);
   });
@@ -86,8 +87,8 @@ describe('Ringside', () => {
         fits: true,
         height,
         width,
-        x: 30,
-        y: 70,
+        x: 150,
+        y: 300,
       });
 
       inner = rect(50, 60, 20, 20);
@@ -263,16 +264,16 @@ describe('Ringside', () => {
       const rightEnd = ringside.right().bottom.end;
       const x = rightEnd.x;
       const y = rightEnd.y;
-      expect(x).toEqual(50);
-      expect(y).toEqual(60);
+      expect(x).toEqual(350);
+      expect(y).toEqual(260);
     });
 
     it('reflects across a horizontal line with no offset', () => {
       const bottomEnd = ringside.bottom().bottom.end;
       const x = bottomEnd.x;
       const y = bottomEnd.y;
-      expect(x).toEqual(30);
-      expect(y).toEqual(70);
+      expect(x).toEqual(150);
+      expect(y).toEqual(300);
     });
 
     it('opposite positions should be reflected about the center of the inner bounds', () => {

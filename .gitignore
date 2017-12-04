@@ -1,13 +1,3 @@
-*
-!yarn.lock
-!src/
-!src/**/*
-!*.js
-!*.json
-!*.md
-!.gitignore
-!.travis.yml
-!LICENSE
-!.npmignore
-!__tests__/
-!__tests__/**/*
+node_modules
+dist
+coverage

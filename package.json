@@ -17,7 +17,7 @@
     "coverage": "npm test -- --coverage --no-cache",
     "coverage:watch": "npm run coverage -- --watch",
     "prepare": "npm run build && npm test",
-    "release": "standard-version && npm pack",
+    "release": "standard-version",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "keywords": [

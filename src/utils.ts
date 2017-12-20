@@ -17,3 +17,7 @@ export const rectToDOMRect: (
     right: x + width,
   };
 };
+
+export const ClientToDOM: (rect: ClientRect) => DOMRect = rect => {
+  return rectToDOMRect(rect.left, rect.top, rect.height, rect.width);
+};

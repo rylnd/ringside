@@ -103,6 +103,36 @@ describe('Ringside', () => {
         y: 80,
       });
     });
+
+    it('positions given Safari ClientRect bounds', () => {
+      outer = {
+        top: 0,
+        left: 0,
+        right: 600,
+        bottom: 500,
+        height: 500,
+        width: 600,
+      };
+      inner = {
+        top: 200,
+        left: 150,
+        right: 350,
+        bottom: 300,
+        height: 100,
+        width: 200,
+      };
+
+      ringside = new Ringside(inner, outer, height, width);
+      const bottom = ringside.bottom();
+
+      expect(bottom.end.bottom).toEqual({
+        fits: true,
+        height,
+        width,
+        x: 150,
+        y: 300,
+      });
+    });
   });
 
   describe('fit', () => {

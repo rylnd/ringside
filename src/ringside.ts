@@ -1,4 +1,5 @@
 import { DOMRect, RectProps } from './types';
+import { ClientToDOM } from './utils';
 
 export type Orientation = 'top' | 'left' | 'bottom' | 'right';
 export type HAlignment = 'start' | 'center' | 'end';
@@ -45,17 +46,21 @@ class Ringside implements RingsideInterface {
   public readonly rightLane: Lane;
   public readonly bottomLane: Lane;
   public readonly leftLane: Lane;
+  public readonly innerBounds: DOMRect;
+  public readonly outerBounds: DOMRect;
 
   public orientations: Orientation[] = ['top', 'right', 'bottom', 'left'];
   public hAlignments: HAlignment[] = ['start', 'center', 'end'];
   public vAlignments: VAlignment[] = ['top', 'middle', 'bottom'];
 
   constructor(
-    readonly innerBounds: DOMRect,
-    readonly outerBounds: DOMRect,
+    innerBounds: ClientRect,
+    outerBounds: ClientRect,
     readonly height: number,
     readonly width: number,
   ) {
+    this.innerBounds = ClientToDOM(innerBounds);
+    this.outerBounds = ClientToDOM(outerBounds);
     this.topLane = {
       name: 'top',
       x: this.outerBounds.x,

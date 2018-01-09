@@ -1,5 +1,5 @@
 import { Ringside } from '../src';
-import { rectToDOMRect as rect } from '../src/utils';
+import { fullBounds } from '../src/utils';
 
 const positions = side =>
   (Object as any).entries(side).map(([_, position]) => position);
@@ -14,8 +14,8 @@ describe('Ringside', () => {
   let ringside: Ringside;
 
   beforeEach(() => {
-    outer = rect(0, 0, 500, 600);
-    inner = rect(150, 200, 100, 200);
+    outer = fullBounds({ left: 0, top: 0, height: 500, width: 600 });
+    inner = fullBounds({ left: 150, top: 200, height: 100, width: 200 });
     height = 40;
     width = 50;
 
@@ -83,25 +83,29 @@ describe('Ringside', () => {
 
     it('properly positions on the bottom', () => {
       let bottom = ringside.bottom();
-      expect(bottom.end.bottom).toEqual({
-        fits: true,
-        height,
-        width,
-        x: 150,
-        y: 300,
-      });
+      expect(bottom.end.bottom).toEqual(
+        expect.objectContaining({
+          fits: true,
+          height,
+          width,
+          x: 150,
+          y: 300,
+        }),
+      );
 
-      inner = rect(50, 60, 20, 20);
+      inner = fullBounds({ left: 50, top: 60, height: 20, width: 20 });
       ringside = new Ringside(inner, outer, height, width);
       bottom = ringside.bottom();
 
-      expect(bottom.end.bottom).toEqual({
-        fits: true,
-        height,
-        width,
-        x: 50,
-        y: 80,
-      });
+      expect(bottom.end.bottom).toEqual(
+        expect.objectContaining({
+          fits: true,
+          height,
+          width,
+          x: 50,
+          y: 80,
+        }),
+      );
     });
 
     it('positions given Safari ClientRect bounds', () => {
@@ -125,13 +129,15 @@ describe('Ringside', () => {
       ringside = new Ringside(inner, outer, height, width);
       const bottom = ringside.bottom();
 
-      expect(bottom.end.bottom).toEqual({
-        fits: true,
-        height,
-        width,
-        x: 150,
-        y: 300,
-      });
+      expect(bottom.end.bottom).toEqual(
+        expect.objectContaining({
+          fits: true,
+          height,
+          width,
+          x: 150,
+          y: 300,
+        }),
+      );
     });
   });
 
@@ -309,14 +315,9 @@ describe('Ringside', () => {
     it('opposite positions should be reflected about the center of the inner bounds', () => {
       const top = ringside.top().bottom.end;
       const bottom = ringside.bottom().bottom.start;
-      const bottomY = bottom.y;
-      const topY = top.y;
-      delete bottom.y;
-      delete top.y;
 
-      expect(bottomY).toEqual(inner.bottom);
-      expect(topY).toEqual(inner.top - height);
-      expect(bottom).toEqual(top);
+      expect(bottom.y).toEqual(inner.bottom);
+      expect(top.y).toEqual(inner.top - height);
     });
   });
 });

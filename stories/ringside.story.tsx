@@ -5,7 +5,7 @@ import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 import { interpolateRainbow } from 'd3-scale';
 
 import { Ringside } from '../src';
-import { rectToDOMRect as rect } from '../src/utils';
+import { fullBounds } from '../src/utils';
 
 const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
 
@@ -43,8 +43,18 @@ Stories.add('Ringside', () => {
   ctx.middlevShow = boolean('Middle Alignment', true);
   ctx.bottomvShow = boolean('Bottom Alignment', true);
 
-  const outerBounds = rect(outerX, outerY, outerHeight, outerWidth);
-  const innerBounds = rect(innerX, innerY, innerHeight, innerWidth);
+  const outerBounds = fullBounds({
+    left: outerX,
+    top: outerY,
+    height: outerHeight,
+    width: outerWidth,
+  });
+  const innerBounds = fullBounds({
+    left: innerX,
+    top: innerY,
+    height: innerHeight,
+    width: innerWidth,
+  });
 
   ctx.posit = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
 
@@ -58,7 +68,7 @@ Stories.add('Ringside', () => {
   };
 
   const lanes = ctx.posit.lanes().map(lane => (
-    <rect style={{ fillOpacity: 0.7 }} {...lane} fill="gray">
+    <rect style={{ fillOpacity: 0.7 }} {...fullBounds(lane)} fill="gray">
       {lane.name}
     </rect>
   ));

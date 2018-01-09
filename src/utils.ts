@@ -1,23 +1,16 @@
-import { DOMRect } from './types';
+import { Bounds, MinBounds } from './types';
 
-export const rectToDOMRect: (
-  x: number,
-  y: number,
-  height: number,
-  width: number,
-) => DOMRect = (x, y, height, width) => {
+export const fullBounds: (bounds: MinBounds) => Bounds = minBounds => {
+  const { left, top, height, width } = minBounds;
+
   return {
-    x,
-    y,
+    x: left,
+    y: top,
     height,
     width,
-    top: y,
-    left: x,
-    bottom: y + height,
-    right: x + width,
+    top,
+    left,
+    bottom: top + height,
+    right: left + width,
   };
-};
-
-export const ClientToDOM: (rect: ClientRect) => DOMRect = rect => {
-  return rectToDOMRect(rect.left, rect.top, rect.height, rect.width);
 };

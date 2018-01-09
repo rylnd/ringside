@@ -1,15 +1,16 @@
-import { DOMRect, RectProps } from './types';
-import { ClientToDOM } from './utils';
+import { Bounds, MinBounds } from './types';
+import { fullBounds } from './utils';
+import { fitsBounds } from './fitter';
 
 export type Orientation = 'top' | 'left' | 'bottom' | 'right';
 export type HAlignment = 'start' | 'center' | 'end';
 export type VAlignment = 'top' | 'middle' | 'bottom';
 
-export interface Positioned extends Partial<RectProps> {
+export interface Positioned extends Bounds {
   fits: boolean;
 }
 
-export interface Lane extends Partial<RectProps> {
+export interface Lane extends MinBounds {
   name: Orientation;
 }
 
@@ -46,8 +47,8 @@ class Ringside implements RingsideInterface {
   public readonly rightLane: Lane;
   public readonly bottomLane: Lane;
   public readonly leftLane: Lane;
-  public readonly innerBounds: DOMRect;
-  public readonly outerBounds: DOMRect;
+  public readonly innerBounds: Bounds;
+  public readonly outerBounds: Bounds;
 
   public orientations: Orientation[] = ['top', 'right', 'bottom', 'left'];
   public hAlignments: HAlignment[] = ['start', 'center', 'end'];
@@ -59,36 +60,33 @@ class Ringside implements RingsideInterface {
     readonly height: number,
     readonly width: number,
   ) {
-    this.innerBounds = ClientToDOM(innerBounds);
-    this.outerBounds = ClientToDOM(outerBounds);
+    this.innerBounds = fullBounds(innerBounds);
+    this.outerBounds = fullBounds(outerBounds);
     this.topLane = {
       name: 'top',
-      x: this.outerBounds.x,
-      y: this.outerBounds.y,
+      left: this.outerBounds.left,
+      top: this.outerBounds.top,
       width: this.outerBounds.width,
-      height: this.innerBounds.y - this.outerBounds.y,
+      height: this.innerBounds.top - this.outerBounds.top,
     };
-
     this.leftLane = {
       name: 'left',
-      x: this.outerBounds.x,
-      y: this.outerBounds.y,
+      left: this.outerBounds.left,
+      top: this.outerBounds.top,
       height: this.outerBounds.height,
       width: this.innerBounds.x - this.outerBounds.x,
     };
-
     this.rightLane = {
       name: 'right',
-      x: this.innerBounds.right,
-      y: this.outerBounds.y,
+      left: this.innerBounds.right,
+      top: this.outerBounds.top,
       height: this.outerBounds.height,
       width: this.outerBounds.right - this.innerBounds.right,
     };
-
     this.bottomLane = {
       name: 'bottom',
-      x: this.outerBounds.x,
-      y: this.innerBounds.bottom,
+      left: this.outerBounds.left,
+      top: this.innerBounds.bottom,
       height: this.outerBounds.bottom - this.innerBounds.bottom,
       width: this.outerBounds.width,
     };
@@ -139,7 +137,10 @@ class Ringside implements RingsideInterface {
     vAlignment: VAlignment,
   ): Positioned {
     const bounds = this.boundingBox(orientation, hAlignment);
-    const fits = this.fitsBounds(bounds);
+    const boundsFit = fitsBounds(bounds, this.outerBounds);
+    const fits =
+      boundsFit && this.height <= bounds.height && this.width <= bounds.width;
+
     const aligned = this.alignInBounds(
       bounds,
       orientation,
@@ -148,7 +149,7 @@ class Ringside implements RingsideInterface {
     );
 
     return {
-      ...aligned,
+      ...fullBounds(aligned),
       fits,
     };
   }
@@ -156,13 +157,13 @@ class Ringside implements RingsideInterface {
   private boundingBox(
     orientation: Orientation,
     alignment: HAlignment,
-  ): RectProps {
+  ): MinBounds {
     const thisLane = this.relativeLane(orientation, 'center');
-    const { width, x } = this.relativeProps(orientation);
-    const bounds = { ...thisLane };
+    const { width, left } = this.relativeProps(orientation);
+    const { name, ...bounds } = thisLane;
 
     bounds[width] = this.boundingWidth(orientation, alignment);
-    bounds[x] = this.boundingX(orientation, alignment, bounds[width]);
+    bounds[left] = this.boundingX(orientation, alignment, bounds[width]);
 
     return bounds;
   }
@@ -185,79 +186,70 @@ class Ringside implements RingsideInterface {
     alignment: HAlignment,
     boundingWidth: number,
   ) {
-    const { width, x, xScale } = this.relativeProps(orientation);
+    const { width, left, xScale } = this.relativeProps(orientation);
 
     if (
       (alignment === 'start' && xScale(1) < 0) ||
       (alignment === 'end' && xScale(1) > 0)
     ) {
-      return this.innerBounds[x] + this.innerBounds[width] - boundingWidth;
+      return this.innerBounds[left] + this.innerBounds[width] - boundingWidth;
     } else if (alignment === 'center') {
-      return this.innerBounds[x] + (this.innerBounds[width] - this[width]) / 2;
+      return (
+        this.innerBounds[left] + (this.innerBounds[width] - this[width]) / 2
+      );
     } else {
-      return this.innerBounds[x];
+      return this.innerBounds[left];
     }
   }
 
-  private fitsBounds(bounds: RectProps): boolean {
-    return (
-      this.height <= bounds.height &&
-      this.width <= bounds.width &&
-      this.outerBounds.left <= bounds.x &&
-      this.outerBounds.top <= bounds.y &&
-      this.outerBounds.right >= bounds.x + bounds.width &&
-      this.outerBounds.bottom >= bounds.y + bounds.height
-    );
-  }
-
   private alignInBounds(
-    bounds: RectProps,
+    bounds: MinBounds,
     orientation: Orientation,
     hAlignment: HAlignment,
     vAlignment: VAlignment,
-  ): RectProps {
-    const { x, y } = this.relativeProps(orientation);
+  ): MinBounds {
+    const { left, top } = this.relativeProps(orientation);
 
     return {
       height: this.height,
       width: this.width,
-      [x]: this.alignHorizontal(bounds, orientation, hAlignment),
-      [y]: this.alignVertical(bounds, orientation, vAlignment),
+      [left]: this.alignHorizontal(bounds, orientation, hAlignment),
+      [top]: this.alignVertical(bounds, orientation, vAlignment),
     } as any;
   }
 
   private alignHorizontal(
-    bounds: RectProps,
+    bounds: MinBounds,
     orientation: Orientation,
     alignment: HAlignment,
   ): number {
-    const { width, x, xScale } = this.relativeProps(orientation);
+    const { width, left, xScale } = this.relativeProps(orientation);
     if (
       (alignment === 'start' && xScale(1) < 0) ||
       (alignment === 'end' && xScale(1) > 0)
     ) {
-      return bounds[x] + bounds[width] - this[width];
+      return bounds[left] + bounds[width] - this[width];
     } else if (alignment === 'center') {
-      return bounds[x] + (bounds[width] - this[width]) / 2;
+      return bounds[left] + (bounds[width] - this[width]) / 2;
     }
-    return bounds[x];
+    return bounds[left];
   }
 
   private alignVertical(
-    bounds: RectProps,
+    bounds: MinBounds,
     orientation: Orientation,
     alignment: VAlignment,
   ): number {
-    const { height, y, yScale } = this.relativeProps(orientation);
+    const { height, top, yScale } = this.relativeProps(orientation);
     if (
       (alignment === 'bottom' && yScale(1) < 0) ||
       (alignment === 'top' && yScale(1) > 0)
     ) {
-      return bounds[y] + bounds[height] - this[height];
+      return bounds[top] + bounds[height] - this[height];
     } else if (alignment === 'middle') {
-      return bounds[y] + (bounds[height] - this[height]) / 2;
+      return bounds[top] + (bounds[height] - this[height]) / 2;
     }
-    return bounds[y];
+    return bounds[top];
   }
 
   private relativeProp(props, orientation, offset = 0) {
@@ -276,14 +268,14 @@ class Ringside implements RingsideInterface {
     return {
       height: this.relativeProp(['height', 'width'], orientation),
       width: this.relativeProp(['width', 'height'], orientation),
-      x: this.relativeProp(['x', 'y'], orientation),
-      y: this.relativeProp(['y', 'x'], orientation),
+      left: this.relativeProp(['left', 'top'], orientation),
+      top: this.relativeProp(['top', 'left'], orientation),
       xScale: this.relativeProp([ident, ident, invert, invert], orientation),
       yScale: this.relativeProp([invert, ident, ident, invert], orientation),
     };
   }
 
-  private relativeLane(orientation: Orientation, alignment: HAlignment) {
+  private relativeLane(orientation: Orientation, alignment: HAlignment): Lane {
     const alignmentOffset = { start: 1, center: 0, end: -1 }[alignment];
     return this.relativeProp(this.lanes(), orientation, alignmentOffset);
   }

@@ -1,6 +1,6 @@
 import { Bounds, MinBounds } from './types';
 import { fullBounds } from './utils';
-import { fitsBounds } from './fitter';
+import { fitsBounds } from './fitting';
 
 export type Orientation = 'top' | 'left' | 'bottom' | 'right';
 export type HAlignment = 'start' | 'center' | 'end';

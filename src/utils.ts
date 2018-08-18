@@ -1,11 +1,9 @@
-import { Bounds, MinBounds } from './types';
+import { Rectangle, FullRect } from './types';
 
-export const fullBounds: (bounds: MinBounds) => Bounds = minBounds => {
-  const { left, top, height, width } = minBounds;
+export const fullRect: (rectangle: Rectangle) => FullRect = rectangle => {
+  const { left, top, height, width } = rectangle;
 
   return {
-    x: left,
-    y: top,
     height,
     width,
     top,

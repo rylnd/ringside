@@ -55,6 +55,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
+    "@types/d3-scale": "^2.0.1",
     "d3-scale": "^1.0.7"
   },
   "repository": {

@@ -1,7 +1,7 @@
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 
 import { Grid } from '../src';
-import { Position, XAlignment, YAlignment, XGrid, YGrid } from './types';
+import { Position, XAlignment, YAlignment, XBasis, YBasis } from './types';
 
 export default class implements Position {
   readonly top: number;
@@ -14,8 +14,8 @@ export default class implements Position {
     readonly height: number,
     readonly width: number,
     readonly grid: Grid,
-    readonly xGrid: XGrid = XGrid.INNER_LEFT,
-    readonly yGrid: YGrid = YGrid.INNER_TOP,
+    readonly xBasis: XBasis = XBasis.INNER_LEFT,
+    readonly yBasis: YBasis = YBasis.INNER_TOP,
     readonly xAlign: XAlignment = XAlignment.END,
     readonly yAlign: YAlignment = YAlignment.BOTTOM,
   ) {
@@ -31,14 +31,14 @@ export default class implements Position {
   }
 
   private calculateTop(): number {
-    const start = this.grid.yScale(this.yGrid);
+    const start = this.grid.yScale(this.yBasis);
     const offset = this.yScale(this.yAlign);
 
     return start - offset;
   }
 
   private calculateLeft(): number {
-    const start = this.grid.xScale(this.xGrid);
+    const start = this.grid.xScale(this.xBasis);
     const offset = this.xScale(this.xAlign);
 
     return start - offset;

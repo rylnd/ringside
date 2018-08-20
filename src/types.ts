@@ -22,14 +22,14 @@ export enum YAlignment {
   BOTTOM = 1,
 }
 
-export enum XGrid {
+export enum XBasis {
   OUTER_LEFT = 0,
   INNER_LEFT = 1,
   INNER_RIGHT = 2,
   OUTER_RIGHT = 3,
 }
 
-export enum YGrid {
+export enum YBasis {
   OUTER_TOP = 0,
   INNER_TOP = 1,
   INNER_BOTTOM = 2,
@@ -39,8 +39,8 @@ export enum YGrid {
 export interface Position extends Rectangle {
   xAlign: XAlignment;
   yAlign: YAlignment;
-  xGrid: XGrid;
-  yGrid: YGrid;
+  xBasis: XBasis;
+  yBasis: YBasis;
 }
 
 export interface FittedPosition extends Position {

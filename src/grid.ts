@@ -1,6 +1,6 @@
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 
-import { Rectangle, XGrid, YGrid } from './types';
+import { Rectangle, XBasis, YBasis } from './types';
 import { fullRect } from './utils';
 
 export default class {
@@ -13,10 +13,10 @@ export default class {
 
     this.xScale = scaleLinear()
       .domain([
-        XGrid.OUTER_LEFT,
-        XGrid.INNER_LEFT,
-        XGrid.INNER_RIGHT,
-        XGrid.OUTER_RIGHT,
+        XBasis.OUTER_LEFT,
+        XBasis.INNER_LEFT,
+        XBasis.INNER_RIGHT,
+        XBasis.OUTER_RIGHT,
       ])
       .range([
         outerRect.left,
@@ -27,10 +27,10 @@ export default class {
 
     this.yScale = scaleLinear()
       .domain([
-        YGrid.OUTER_TOP,
-        YGrid.INNER_TOP,
-        YGrid.INNER_BOTTOM,
-        YGrid.OUTER_BOTTOM,
+        YBasis.OUTER_TOP,
+        YBasis.INNER_TOP,
+        YBasis.INNER_BOTTOM,
+        YBasis.OUTER_BOTTOM,
       ])
       .range([
         outerRect.top,

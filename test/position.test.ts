@@ -1,5 +1,5 @@
 import { Grid, Position } from '../src';
-import { XAlignment, YAlignment, XGrid, YGrid } from '../src/types';
+import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
 
 const defaultRect = { height: 100, width: 100, top: 0, left: 0 };
 
@@ -24,19 +24,19 @@ describe('Position', () => {
       positionBuilder = (...args) => new Position(1, 2, grid, ...args);
     });
 
-    it('modifies the left value depending on the xGrid value', () => {
-      position = positionBuilder(XGrid.INNER_LEFT);
-      const alignedPosition = positionBuilder(XGrid.OUTER_RIGHT);
+    it('modifies the left value depending on the XBasis value', () => {
+      position = positionBuilder(XBasis.INNER_LEFT);
+      const alignedPosition = positionBuilder(XBasis.OUTER_RIGHT);
 
       expect(position.left).toEqual(-2);
       expect(alignedPosition.left).toEqual(98);
     });
 
-    it('modifies the top value depending on the yGrid value', () => {
-      position = positionBuilder(XGrid.INNER_LEFT, YGrid.INNER_TOP);
+    it('modifies the top value depending on the YBasis value', () => {
+      position = positionBuilder(XBasis.INNER_LEFT, YBasis.INNER_TOP);
       const alignedPosition = positionBuilder(
-        XGrid.INNER_LEFT,
-        YGrid.INNER_BOTTOM,
+        XBasis.INNER_LEFT,
+        YBasis.INNER_BOTTOM,
       );
 
       expect(position.top).toEqual(-1);
@@ -47,7 +47,7 @@ describe('Position', () => {
   describe('alignments', () => {
     beforeEach(() => {
       positionBuilder = (...args) =>
-        new Position(1, 2, grid, XGrid.INNER_LEFT, YGrid.INNER_TOP, ...args);
+        new Position(1, 2, grid, XBasis.INNER_LEFT, YBasis.INNER_TOP, ...args);
     });
 
     it('modifies the left value depending on the xAlign value', () => {

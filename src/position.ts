@@ -1,9 +1,14 @@
+import { scaleLinear, ScaleLinear } from 'd3-scale';
+
+import { Grid } from '../src';
 import { Position, XAlignment, YAlignment, XGrid, YGrid } from './types';
-import Grid from './grid';
 
 export default class implements Position {
   readonly top: number;
   readonly left: number;
+
+  private readonly xScale: ScaleLinear<number, number>;
+  private readonly yScale: ScaleLinear<number, number>;
 
   constructor(
     readonly height: number,
@@ -14,31 +19,28 @@ export default class implements Position {
     readonly xAlign: XAlignment = XAlignment.END,
     readonly yAlign: YAlignment = YAlignment.BOTTOM,
   ) {
+    this.xScale = scaleLinear()
+      .domain([0, 1])
+      .range([0, width]);
+    this.yScale = scaleLinear()
+      .domain([0, 1])
+      .range([0, height]);
+
     this.top = this.calculateTop();
     this.left = this.calculateLeft();
   }
 
   private calculateTop(): number {
-    const startingTop = this.grid.yScale(this.yGrid);
+    const start = this.grid.yScale(this.yGrid);
+    const offset = this.yScale(this.yAlign);
 
-    if (this.yAlign === YAlignment.TOP) {
-      return startingTop;
-    } else if (this.yAlign === YAlignment.BOTTOM) {
-      return startingTop - this.height;
-    } else {
-      return startingTop - this.height / 2;
-    }
+    return start - offset;
   }
 
   private calculateLeft(): number {
-    const startingLeft = this.grid.xScale(this.xGrid);
+    const start = this.grid.xScale(this.xGrid);
+    const offset = this.xScale(this.xAlign);
 
-    if (this.xAlign === XAlignment.START) {
-      return startingLeft;
-    } else if (this.xAlign === XAlignment.END) {
-      return startingLeft - this.width;
-    } else {
-      return startingLeft - this.width / 2;
-    }
+    return start - offset;
   }
 }

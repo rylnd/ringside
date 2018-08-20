@@ -1,4 +1,5 @@
 import { scaleLinear, ScaleLinear } from 'd3-scale';
+
 import { Rectangle, XGrid, YGrid } from './types';
 import { fullRect } from './utils';
 

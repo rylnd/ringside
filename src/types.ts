@@ -11,15 +11,15 @@ export interface FullRect extends Rectangle {
 }
 
 export enum XAlignment {
-  START = 'start',
-  CENTER = 'center',
-  END = 'end',
+  START = 0,
+  CENTER = 0.5,
+  END = 1,
 }
 
 export enum YAlignment {
-  TOP = 'top',
-  MIDDLE = 'middle',
-  BOTTOM = 'bottom',
+  TOP = 0,
+  MIDDLE = 0.5,
+  BOTTOM = 1,
 }
 
 export enum XGrid {

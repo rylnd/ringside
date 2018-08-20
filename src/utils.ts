@@ -12,3 +12,19 @@ export const fullRect: (rectangle: Rectangle) => FullRect = rectangle => {
     right: left + width,
   };
 };
+
+export type ProductFn = <T>(vectors: T[][]) => T[][];
+export const product: ProductFn = vectors => {
+  return vectors.reduce(
+    (products, vector) => {
+      return [].concat(
+        ...products.map(p => {
+          return vector.map(x => {
+            return p.concat([x]);
+          });
+        }),
+      );
+    },
+    [[]],
+  );
+};

@@ -38,16 +38,20 @@ class Ringside implements RingsideInterface {
       enumValues(YBasis),
       enumValues(XAlignment),
       enumValues(YAlignment),
-    ]).map(combination => {
+    ]).map(([xBasis, yBasis, xAlignment, yAlignment]) => {
       const position = new Position(
         this.height,
         this.width,
-        this.grid,
-        ...combination,
+        this.grid.xScale(xBasis),
+        this.grid.yScale(yBasis),
+        xAlignment,
+        yAlignment,
       );
 
       return {
         ...position,
+        xBasis,
+        yBasis,
         fits: this.fits(position),
       };
     });

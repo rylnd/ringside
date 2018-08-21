@@ -39,10 +39,10 @@ export enum YBasis {
 export interface Position extends Rectangle {
   xAlign: XAlignment;
   yAlign: YAlignment;
-  xBasis: XBasis;
-  yBasis: YBasis;
 }
 
 export interface FittedPosition extends Position {
   fits: boolean;
+  xBasis: XBasis;
+  yBasis: YBasis;
 }

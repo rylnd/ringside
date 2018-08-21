@@ -25,7 +25,7 @@ Stories.add('Ringside', () => {
   const sizeOptions = {
     range: true,
     min: 0,
-    max: 500,
+    max: 1000,
     step: 1,
   };
 

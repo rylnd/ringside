@@ -6,33 +6,20 @@ import { interpolateRainbow } from 'd3-scale-chromatic';
 
 import { Ringside } from '../src';
 import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
-import { enumKeys } from '../src/utils';
 
-const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
 let ringside: Ringside;
+
+const enumKeys: (e: any) => string[] = e =>
+  Object.keys(e).filter(key => isNaN(Number(key)));
 
 const color = position => {
   const combos = ringside.positions().map(p => JSON.stringify(p));
-
   const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
+
   return interpolateRainbow(hash);
 };
 
-const bounds = r =>
-  [r.innerBounds, r.outerBounds].map(bound => {
-    const { left, top, height, width } = bound;
-
-    return (
-      <rect
-        style={{ fillOpacity: 0.7 }}
-        fill="gray"
-        x={left}
-        y={top}
-        height={height}
-        width={width}
-      />
-    );
-  });
+const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
 
 Stories.add('Ringside', () => {
   const sizeOptions = {
@@ -84,10 +71,22 @@ Stories.add('Ringside', () => {
     filters.yBasis[key] = boolean(`${key} basis`, true);
   });
 
+  const bounds = [ringside.innerBounds, ringside.outerBounds].map(bound => (
+    <rect
+      key={JSON.stringify(bound)}
+      style={{ fillOpacity: 0.7 }}
+      fill="gray"
+      x={bound.left}
+      y={bound.top}
+      height={bound.height}
+      width={bound.width}
+    />
+  ));
+
   const rects = ringside
     .positions()
-    .filter(pos => {
-      return (
+    .filter(
+      pos =>
         Object.keys(filters.xAlign).some(
           filterKey =>
             filters.xAlign[filterKey] && pos.xAlign === XAlignment[filterKey],
@@ -103,26 +102,24 @@ Stories.add('Ringside', () => {
         Object.keys(filters.yBasis).some(
           filterKey =>
             filters.yBasis[filterKey] && pos.yBasis === YBasis[filterKey],
-        )
-      );
-    })
-    .map(pos => {
-      const { left, top, height, width } = pos;
-      return (
+        ),
+    )
+    .map(
+      pos =>
         pos.fits && (
           <rect
+            key={JSON.stringify(pos)}
             style={{ fillOpacity: 0.7 }}
-            x={left}
-            y={top}
-            height={height}
-            width={width}
+            x={pos.left}
+            y={pos.top}
+            height={pos.height}
+            width={pos.width}
             fill={color(pos)}
           >
             {`${JSON.stringify(pos)}`}
           </rect>
-        )
-      );
-    });
+        ),
+    );
 
   return (
     <svg
@@ -131,7 +128,7 @@ Stories.add('Ringside', () => {
       viewBox={`0 0 ${outerWidth + padding} ${outerHeight + padding}`}
     >
       <g>
-        {bounds(ringside)}
+        {bounds}
         {rects}
       </g>
     </svg>

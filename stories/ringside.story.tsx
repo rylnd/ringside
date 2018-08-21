@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, number, boolean } from '@storybook/addon-knobs';
-import { interpolateRainbow } from 'd3-scale';
+import { interpolateRainbow } from 'd3-scale-chromatic';
 
 import { Ringside } from '../src';
-import { fullBounds } from '../src/utils';
+import { XAlignment, YAlignment } from '../src/types';
 
 const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
 
@@ -30,79 +30,80 @@ Stories.add('Ringside', () => {
   const innerWidth = number('Inner Width', 200, sizeOptions);
 
   const ctx = {} as any;
-  ctx.topShow = boolean('Top Lane', true);
-  ctx.rightShow = boolean('Right Lane', true);
-  ctx.bottomShow = boolean('Bottom Lane', true);
-  ctx.leftShow = boolean('Left Lane', true);
-
   ctx.startShow = boolean('Start Alignment', true);
   ctx.centerShow = boolean('Center Alignment', true);
   ctx.endShow = boolean('End Alignment', true);
 
-  ctx.topvShow = boolean('Top Alignment', true);
-  ctx.middlevShow = boolean('Middle Alignment', true);
-  ctx.bottomvShow = boolean('Bottom Alignment', true);
+  ctx.topShow = boolean('Top Alignment', true);
+  ctx.middleShow = boolean('Middle Alignment', true);
+  ctx.bottomShow = boolean('Bottom Alignment', true);
 
-  const outerBounds = fullBounds({
+  const outerBounds = {
     left: outerX,
     top: outerY,
     height: outerHeight,
     width: outerWidth,
-  });
-  const innerBounds = fullBounds({
+  };
+  const innerBounds = {
     left: innerX,
     top: innerY,
     height: innerHeight,
     width: innerWidth,
-  });
+  };
 
   ctx.posit = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
 
-  const color = (h, v) => {
-    const combos = ctx.posit.hAlignments.reduce(
-      (cs, _h) => [...cs, ...ctx.posit.vAlignments.map(_v => _h + _v)],
-      [],
-    );
-    const hash = combos.indexOf(h + v) / combos.length;
+  const color = position => {
+    const combos = ctx.posit.positions().map(p => JSON.stringify(p));
+
+    const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
     return interpolateRainbow(hash);
   };
 
-  const lanes = ctx.posit.lanes().map(lane => (
-    <rect style={{ fillOpacity: 0.7 }} {...fullBounds(lane)} fill="gray">
-      {lane.name}
-    </rect>
-  ));
+  const bounds = [ctx.posit.innerBounds, ctx.posit.outerBounds].map(bound => {
+    const { left, top, height, width } = bound;
 
-  const rects = ctx.posit.orientations.map(o => {
-    return ctx.posit.hAlignments.map(h => {
-      return ctx.posit.vAlignments.map(v => {
-        if (ctx[o + 'Show'] && ctx[h + 'Show'] && ctx[v + 'vShow']) {
-          const position = ctx.posit[o]()[h][v];
-          return (
-            position.fits && (
-              <rect
-                style={{ fillOpacity: 0.7 }}
-                {...position}
-                fill={color(h, v)}
-              >
-                {`${o} ${h} ${v}`}
-              </rect>
-            )
-          );
-        }
-      });
-    });
+    return (
+      <rect
+        style={{ fillOpacity: 0.7 }}
+        fill="gray"
+        x={left}
+        y={top}
+        height={height}
+        width={width}
+      />
+    );
   });
 
-  // const bounds = ctx.posit.bounds.map(([h, v, bound]) => {
-  //   if (ctx[h + 'Show'] && ctx[v + 'vShow']) {
-  //     return (
-  //       <rect {...bound} fill="yellow">
-  //         {`bound ${bound.name} ${h} ${v}`}
-  //       </rect>
-  //     );
-  //   }
-  // });
+  const rects = ctx.posit
+    .positions()
+    .filter(pos => {
+      return (
+        (ctx.startShow && pos.xAlign === XAlignment.START) ||
+        (ctx.centerShow && pos.xAlign === XAlignment.CENTER) ||
+        (ctx.endShow && pos.xAlign === XAlignment.END) ||
+        (ctx.topShow && pos.yAlign === YAlignment.TOP) ||
+        (ctx.middleShow && pos.yAlign === YAlignment.MIDDLE) ||
+        (ctx.bottomShow && pos.yAlign === YAlignment.BOTTOM)
+      );
+    })
+    .map(pos => {
+      const { left, top, height, width } = pos;
+      return (
+        pos.fits && (
+          <rect
+            style={{ fillOpacity: 0.7 }}
+            x={left}
+            y={top}
+            height={height}
+            width={width}
+            fill={color(pos)}
+          >
+            {`${JSON.stringify(pos)}`}
+          </rect>
+        )
+      );
+    });
 
   return (
     <svg
@@ -111,8 +112,7 @@ Stories.add('Ringside', () => {
       viewBox={`0 0 ${outerWidth + padding} ${outerHeight + padding}`}
     >
       <g>
-        {lanes}
-        {/* {bounds} */}
+        {bounds}
         {rects}
       </g>
     </svg>

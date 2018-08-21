@@ -47,26 +47,50 @@ describe('fitting', () => {
       expect(fitsOutside(container, container)).toBeFalsy();
     });
 
-    it('is false if top overlaps container', () => {
+    it('is true if top touches container', () => {
       subject = { ...container, top: 100 };
+
+      expect(fitsOutside(subject, container)).toBeTruthy();
+    });
+
+    it('is true if left touches container', () => {
+      subject = { ...container, left: 100 };
+
+      expect(fitsOutside(subject, container)).toBeTruthy();
+    });
+
+    it('is true if right touches container', () => {
+      subject = { ...container, left: -100 };
+
+      expect(fitsOutside(subject, container)).toBeTruthy();
+    });
+
+    it('is true if bottom touches container', () => {
+      subject = { ...container, top: -100 };
+
+      expect(fitsOutside(subject, container)).toBeTruthy();
+    });
+
+    it('is false if top overlaps container', () => {
+      subject = { ...container, top: 99 };
 
       expect(fitsOutside(subject, container)).toBeFalsy();
     });
 
     it('is false if left overlaps container', () => {
-      subject = { ...container, left: 100 };
+      subject = { ...container, left: 99 };
 
       expect(fitsOutside(subject, container)).toBeFalsy();
     });
 
     it('is false if right overlaps container', () => {
-      subject = { ...container, left: -100 };
+      subject = { ...container, left: -99 };
 
       expect(fitsOutside(subject, container)).toBeFalsy();
     });
 
     it('is false if bottom overlaps container', () => {
-      subject = { ...container, top: -100 };
+      subject = { ...container, top: -99 };
 
       expect(fitsOutside(subject, container)).toBeFalsy();
     });

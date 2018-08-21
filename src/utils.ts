@@ -28,3 +28,8 @@ export const product: ProductFn = vectors => {
     [[]],
   );
 };
+
+export const enumValues: (e: any) => number[] = e =>
+  Object.keys(e)
+    .map(key => Number(e[key]))
+    .filter(num => !isNaN(num));

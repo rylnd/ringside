@@ -1,9 +1,15 @@
 import { scaleLinear, ScaleLinear } from 'd3-scale';
 
 import { Grid } from '../src';
-import { Position, XAlignment, YAlignment, XBasis, YBasis } from './types';
+import {
+  Position as IPosition,
+  XAlignment,
+  YAlignment,
+  XBasis,
+  YBasis,
+} from './types';
 
-export default class implements Position {
+export default class Position implements IPosition {
   readonly top: number;
   readonly left: number;
 
@@ -13,7 +19,7 @@ export default class implements Position {
   constructor(
     readonly height: number,
     readonly width: number,
-    readonly grid: Grid,
+    private readonly grid: Grid,
     readonly xBasis: XBasis = XBasis.INNER_LEFT,
     readonly yBasis: YBasis = YBasis.INNER_TOP,
     readonly xAlign: XAlignment = XAlignment.END,

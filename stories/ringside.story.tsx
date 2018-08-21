@@ -91,15 +91,15 @@ Stories.add('Ringside', () => {
         Object.keys(filters.xAlign).some(
           filterKey =>
             filters.xAlign[filterKey] && pos.xAlign === XAlignment[filterKey],
-        ) ||
+        ) &&
         Object.keys(filters.yAlign).some(
           filterKey =>
             filters.yAlign[filterKey] && pos.yAlign === YAlignment[filterKey],
-        ) ||
+        ) &&
         Object.keys(filters.xBasis).some(
           filterKey =>
             filters.xBasis[filterKey] && pos.xBasis === XBasis[filterKey],
-        ) ||
+        ) &&
         Object.keys(filters.yBasis).some(
           filterKey =>
             filters.yBasis[filterKey] && pos.yBasis === YBasis[filterKey],

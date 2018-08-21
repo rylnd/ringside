@@ -5,9 +5,34 @@ import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 import { interpolateRainbow } from 'd3-scale-chromatic';
 
 import { Ringside } from '../src';
-import { XAlignment, YAlignment } from '../src/types';
+import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
+import { enumKeys } from '../src/utils';
 
 const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
+let ringside: Ringside;
+
+const color = position => {
+  const combos = ringside.positions().map(p => JSON.stringify(p));
+
+  const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
+  return interpolateRainbow(hash);
+};
+
+const bounds = r =>
+  [r.innerBounds, r.outerBounds].map(bound => {
+    const { left, top, height, width } = bound;
+
+    return (
+      <rect
+        style={{ fillOpacity: 0.7 }}
+        fill="gray"
+        x={left}
+        y={top}
+        height={height}
+        width={width}
+      />
+    );
+  });
 
 Stories.add('Ringside', () => {
   const sizeOptions = {
@@ -29,15 +54,6 @@ Stories.add('Ringside', () => {
   const innerHeight = number('Inner Height', 100, sizeOptions);
   const innerWidth = number('Inner Width', 200, sizeOptions);
 
-  const ctx = {} as any;
-  ctx.startShow = boolean('Start Alignment', true);
-  ctx.centerShow = boolean('Center Alignment', true);
-  ctx.endShow = boolean('End Alignment', true);
-
-  ctx.topShow = boolean('Top Alignment', true);
-  ctx.middleShow = boolean('Middle Alignment', true);
-  ctx.bottomShow = boolean('Bottom Alignment', true);
-
   const outerBounds = {
     left: outerX,
     top: outerY,
@@ -51,40 +67,43 @@ Stories.add('Ringside', () => {
     width: innerWidth,
   };
 
-  ctx.posit = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
+  ringside = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
 
-  const color = position => {
-    const combos = ctx.posit.positions().map(p => JSON.stringify(p));
-
-    const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
-    return interpolateRainbow(hash);
-  };
-
-  const bounds = [ctx.posit.innerBounds, ctx.posit.outerBounds].map(bound => {
-    const { left, top, height, width } = bound;
-
-    return (
-      <rect
-        style={{ fillOpacity: 0.7 }}
-        fill="gray"
-        x={left}
-        y={top}
-        height={height}
-        width={width}
-      />
-    );
+  const filters = { xAlign: {}, yAlign: {}, xBasis: {}, yBasis: {} } as any;
+  enumKeys(XAlignment).forEach(key => {
+    filters.xAlign[key] = boolean(`${key} alignment`, true);
+  });
+  enumKeys(YAlignment).forEach(key => {
+    filters.yAlign[key] = boolean(`${key} alignment`, true);
   });
 
-  const rects = ctx.posit
+  enumKeys(XBasis).forEach(key => {
+    filters.xBasis[key] = boolean(`${key} basis`, true);
+  });
+  enumKeys(YBasis).forEach(key => {
+    filters.yBasis[key] = boolean(`${key} basis`, true);
+  });
+
+  const rects = ringside
     .positions()
     .filter(pos => {
       return (
-        (ctx.startShow && pos.xAlign === XAlignment.START) ||
-        (ctx.centerShow && pos.xAlign === XAlignment.CENTER) ||
-        (ctx.endShow && pos.xAlign === XAlignment.END) ||
-        (ctx.topShow && pos.yAlign === YAlignment.TOP) ||
-        (ctx.middleShow && pos.yAlign === YAlignment.MIDDLE) ||
-        (ctx.bottomShow && pos.yAlign === YAlignment.BOTTOM)
+        Object.keys(filters.xAlign).some(
+          filterKey =>
+            filters.xAlign[filterKey] && pos.xAlign === XAlignment[filterKey],
+        ) ||
+        Object.keys(filters.yAlign).some(
+          filterKey =>
+            filters.yAlign[filterKey] && pos.yAlign === YAlignment[filterKey],
+        ) ||
+        Object.keys(filters.xBasis).some(
+          filterKey =>
+            filters.xBasis[filterKey] && pos.xBasis === XBasis[filterKey],
+        ) ||
+        Object.keys(filters.yBasis).some(
+          filterKey =>
+            filters.yBasis[filterKey] && pos.yBasis === YBasis[filterKey],
+        )
       );
     })
     .map(pos => {
@@ -112,7 +131,7 @@ Stories.add('Ringside', () => {
       viewBox={`0 0 ${outerWidth + padding} ${outerHeight + padding}`}
     >
       <g>
-        {bounds}
+        {bounds(ringside)}
         {rects}
       </g>
     </svg>

@@ -33,3 +33,6 @@ export const enumValues: (e: any) => number[] = e =>
   Object.keys(e)
     .map(key => Number(e[key]))
     .filter(num => !isNaN(num));
+
+export const enumKeys: (e: any) => string[] = e =>
+  Object.keys(e).filter(key => isNaN(Number(key)));

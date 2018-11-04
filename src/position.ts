@@ -12,8 +12,8 @@ export default class Position implements IPosition {
   constructor(
     readonly height: number = 0,
     readonly width: number = 0,
-    readonly startingLeft: number = 0,
-    readonly startingTop: number = 0,
+    readonly originLeft: number = 0,
+    readonly originTop: number = 0,
     readonly xAlign: XAlignment = XAlignment.END,
     readonly yAlign: YAlignment = YAlignment.BOTTOM,
   ) {
@@ -24,7 +24,7 @@ export default class Position implements IPosition {
       .domain([0, 1])
       .range([0, height]);
 
-    this.left = startingLeft - this.xScale(xAlign);
-    this.top = startingTop - this.yScale(yAlign);
+    this.left = originLeft - this.xScale(xAlign);
+    this.top = originTop - this.yScale(yAlign);
   }
 }

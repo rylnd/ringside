@@ -13,18 +13,13 @@ export const fullRect: (rectangle: Rectangle) => FullRect = rectangle => {
   };
 };
 
+const flatten = arrays => [].concat(...arrays);
+
 export type ProductFn = <T>(vectors: T[][]) => T[][];
 export const product: ProductFn = vectors => {
   return vectors.reduce(
-    (products, vector) => {
-      return [].concat(
-        ...products.map(p => {
-          return vector.map(x => {
-            return p.concat([x]);
-          });
-        }),
-      );
-    },
+    (products, vector) =>
+      flatten(products.map(p => vector.map(x => [...p, x]))),
     [[]],
   );
 };

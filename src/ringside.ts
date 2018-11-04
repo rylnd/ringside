@@ -47,12 +47,13 @@ class Ringside implements RingsideInterface {
         xAlignment,
         yAlignment,
       );
+      const fits = this.fits(position);
 
       return {
-        ...position,
         xBasis,
         yBasis,
-        fits: this.fits(position),
+        fits,
+        ...position,
       };
     });
   }

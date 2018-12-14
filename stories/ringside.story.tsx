@@ -2,10 +2,22 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, number, boolean } from '@storybook/addon-knobs';
-import { interpolateRainbow } from 'd3-scale';
+import { interpolateRainbow } from 'd3-scale-chromatic';
 
 import { Ringside } from '../src';
-import { rectToDOMRect as rect } from '../src/utils';
+import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
+
+let ringside: Ringside;
+
+const enumKeys: (e: any) => string[] = e =>
+  Object.keys(e).filter(key => isNaN(Number(key)));
+
+const color = position => {
+  const combos = ringside.positions().map(p => JSON.stringify(p));
+  const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
+
+  return interpolateRainbow(hash);
+};
 
 const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
 
@@ -13,7 +25,7 @@ Stories.add('Ringside', () => {
   const sizeOptions = {
     range: true,
     min: 0,
-    max: 500,
+    max: 1000,
     step: 1,
   };
 
@@ -29,70 +41,85 @@ Stories.add('Ringside', () => {
   const innerHeight = number('Inner Height', 100, sizeOptions);
   const innerWidth = number('Inner Width', 200, sizeOptions);
 
-  const ctx = {} as any;
-  ctx.topShow = boolean('Top Lane', true);
-  ctx.rightShow = boolean('Right Lane', true);
-  ctx.bottomShow = boolean('Bottom Lane', true);
-  ctx.leftShow = boolean('Left Lane', true);
-
-  ctx.startShow = boolean('Start Alignment', true);
-  ctx.centerShow = boolean('Center Alignment', true);
-  ctx.endShow = boolean('End Alignment', true);
-
-  ctx.topvShow = boolean('Top Alignment', true);
-  ctx.middlevShow = boolean('Middle Alignment', true);
-  ctx.bottomvShow = boolean('Bottom Alignment', true);
-
-  const outerBounds = rect(outerX, outerY, outerHeight, outerWidth);
-  const innerBounds = rect(innerX, innerY, innerHeight, innerWidth);
-
-  ctx.posit = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
-
-  const color = (h, v) => {
-    const combos = ctx.posit.hAlignments.reduce(
-      (cs, _h) => [...cs, ...ctx.posit.vAlignments.map(_v => _h + _v)],
-      [],
-    );
-    const hash = combos.indexOf(h + v) / combos.length;
-    return interpolateRainbow(hash);
+  const outerBounds = {
+    left: outerX,
+    top: outerY,
+    height: outerHeight,
+    width: outerWidth,
+  };
+  const innerBounds = {
+    left: innerX,
+    top: innerY,
+    height: innerHeight,
+    width: innerWidth,
   };
 
-  const lanes = ctx.posit.lanes().map(lane => (
-    <rect style={{ fillOpacity: 0.7 }} {...lane} fill="gray">
-      {lane.name}
-    </rect>
-  ));
+  ringside = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
 
-  const rects = ctx.posit.orientations.map(o => {
-    return ctx.posit.hAlignments.map(h => {
-      return ctx.posit.vAlignments.map(v => {
-        if (ctx[o + 'Show'] && ctx[h + 'Show'] && ctx[v + 'vShow']) {
-          const position = ctx.posit[o]()[h][v];
-          return (
-            position.fits && (
-              <rect
-                style={{ fillOpacity: 0.7 }}
-                {...position}
-                fill={color(h, v)}
-              >
-                {`${o} ${h} ${v}`}
-              </rect>
-            )
-          );
-        }
-      });
-    });
+  const filters = { xAlign: {}, yAlign: {}, xBasis: {}, yBasis: {} } as any;
+  enumKeys(XAlignment).forEach(key => {
+    filters.xAlign[key] = boolean(`${key} alignment`, true);
+  });
+  enumKeys(YAlignment).forEach(key => {
+    filters.yAlign[key] = boolean(`${key} alignment`, true);
   });
 
-  // const bounds = ctx.posit.bounds.map(([h, v, bound]) => {
-  //   if (ctx[h + 'Show'] && ctx[v + 'vShow']) {
-  //     return (
-  //       <rect {...bound} fill="yellow">
-  //         {`bound ${bound.name} ${h} ${v}`}
-  //       </rect>
-  //     );
-  //   }
-  // });
+  enumKeys(XBasis).forEach(key => {
+    filters.xBasis[key] = boolean(`${key} basis`, true);
+  });
+  enumKeys(YBasis).forEach(key => {
+    filters.yBasis[key] = boolean(`${key} basis`, true);
+  });
+
+  const bounds = [ringside.innerBounds, ringside.outerBounds].map(bound => (
+    <rect
+      key={JSON.stringify(bound)}
+      style={{ fillOpacity: 0.7 }}
+      fill="gray"
+      x={bound.left}
+      y={bound.top}
+      height={bound.height}
+      width={bound.width}
+    />
+  ));
+
+  const rects = ringside
+    .positions()
+    .filter(
+      pos =>
+        Object.keys(filters.xAlign).some(
+          filterKey =>
+            filters.xAlign[filterKey] && pos.xAlign === XAlignment[filterKey],
+        ) &&
+        Object.keys(filters.yAlign).some(
+          filterKey =>
+            filters.yAlign[filterKey] && pos.yAlign === YAlignment[filterKey],
+        ) &&
+        Object.keys(filters.xBasis).some(
+          filterKey =>
+            filters.xBasis[filterKey] && pos.xBasis === XBasis[filterKey],
+        ) &&
+        Object.keys(filters.yBasis).some(
+          filterKey =>
+            filters.yBasis[filterKey] && pos.yBasis === YBasis[filterKey],
+        ),
+    )
+    .map(
+      pos =>
+        pos.fits && (
+          <rect
+            key={JSON.stringify(pos)}
+            style={{ fillOpacity: 0.7 }}
+            x={pos.left}
+            y={pos.top}
+            height={pos.height}
+            width={pos.width}
+            fill={color(pos)}
+          >
+            {`${JSON.stringify(pos)}`}
+          </rect>
+        ),
+    );
 
   return (
     <svg
@@ -101,8 +128,7 @@ Stories.add('Ringside', () => {
       viewBox={`0 0 ${outerWidth + padding} ${outerHeight + padding}`}
     >
       <g>
-        {lanes}
-        {/* {bounds} */}
+        {bounds}
         {rects}
       </g>
     </svg>

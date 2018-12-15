@@ -1,5 +1,6 @@
-var nodeExternals = require('webpack-node-externals');
 var path = require('path');
+var nodeExternals = require('webpack-node-externals');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: './src/index.ts',
@@ -33,4 +34,7 @@ module.exports = {
     ],
   },
   externals: [nodeExternals()],
+  plugins: [
+    new CleanWebpackPlugin(['dist']),
+  ]
 };

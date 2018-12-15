@@ -24,9 +24,6 @@
     "max-classes-per-file": [false],
     "object-literal-key-quotes": [true, "as-needed"],
     "no-object-literal-type-assertion": false,
-    "no-unused-variable": [true, {
-      "ignore-pattern": "^_"
-    }],
     "member-ordering": [true, {
       "order": "statics-first"
     }],

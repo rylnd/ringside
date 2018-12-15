@@ -1,15 +1,9 @@
-var path = require('path');
-var nodeExternals = require('webpack-node-externals');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-module.exports = {
+const commonConfig = {
   entry: './src/index.ts',
-  target: 'node',
-  output: {
-    filename: 'index.js',
-    library: 'ringside',
-    libraryTarget: 'umd',
-  },
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
@@ -33,8 +27,28 @@ module.exports = {
       },
     ],
   },
-  externals: [nodeExternals()],
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-  ]
+  plugins: [new CleanWebpackPlugin(['dist'])],
 };
+
+const nodeConfig = {
+  ...commonConfig,
+  target: 'node',
+  output: {
+    library: 'ringside',
+    libraryTarget: 'umd',
+    filename: 'index.js',
+  },
+  externals: [nodeExternals()],
+};
+
+const browserConfig = {
+  ...commonConfig,
+  target: 'web',
+  output: {
+    library: 'ringside',
+    libraryTarget: 'umd',
+    filename: 'index.browser.js',
+  },
+};
+
+module.exports = [nodeConfig, browserConfig];

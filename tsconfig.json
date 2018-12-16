@@ -16,7 +16,8 @@
       "node_modules/@types"
     ],
     "types": [
-      "@types/node"
+      "@types/node",
+      "@types/jest"
     ]
   },
   "files": [
@@ -24,9 +25,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "useBabel": true,
-    "useCache": true
-  }
+  ]
 }

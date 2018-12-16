@@ -49,6 +49,8 @@ const tooltipPosition = {
 };
 ```
 
+For more examples, check the [examples repo](https://github.com/rylnd/ringside-examples).
+
 ## Development
 
 ```bash

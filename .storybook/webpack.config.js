@@ -2,11 +2,11 @@ const path = require('path');
 
 const SRC = path.resolve(__dirname, '../src/');
 
-module.exports = (baseConfig, env, defaultConfig) => ({
-  ...defaultConfig,
+module.exports = ({ config} ) => ({
+  ...config,
   module: {
     rules: [
-      ...defaultConfig.module.rules,
+      ...config.module.rules,
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
@@ -14,7 +14,7 @@ module.exports = (baseConfig, env, defaultConfig) => ({
     ],
   },
   resolve: {
-    extensions: [...defaultConfig.resolve.extensions, '.ts', '.tsx'],
-    modules: [...defaultConfig.resolve.modules, SRC],
+    extensions: [...config.resolve.extensions, '.ts', '.tsx'],
+    modules: [...config.resolve.modules, SRC],
   },
 });

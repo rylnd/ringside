@@ -34,8 +34,8 @@
   "author": "Ryland Herrick",
   "license": "MIT",
   "devDependencies": {
-    "@storybook/addon-knobs": "^4.1.1",
-    "@storybook/react": "^4.1.1",
+    "@storybook/addon-knobs": "^5.0.x",
+    "@storybook/react": "^5.0.x",
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.15",
     "browserify": "^16.2.3",

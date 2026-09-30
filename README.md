@@ -1,4 +1,4 @@
-# ringside [![CircleCI](https://circleci.com/gh/rylnd/ringside.svg?style=svg)](https://circleci.com/gh/rylnd/ringside)
+# ringside [![CI](https://github.com/rylnd/ringside/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/rylnd/ringside/actions/workflows/ci.yml) [![CircleCI](https://circleci.com/gh/rylnd/ringside.svg?style=svg)](https://circleci.com/gh/rylnd/ringside)
 
 A library that determines the fit and positioning of a rectangle relative to inner and outer bounds.
 

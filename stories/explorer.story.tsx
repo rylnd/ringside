@@ -2,34 +2,14 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { withKnobs, number, boolean } from '@storybook/addon-knobs';
-import { interpolateRainbow } from 'd3-scale-chromatic';
 
 import { Ringside } from '../src';
 import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
+import { Canvas, colorFor, enumKeys, sizeOptions } from './helpers';
 
-let ringside: Ringside;
+const Stories = storiesOf('Usage/Explorer', module).addDecorator(withKnobs);
 
-const enumKeys: (e: any) => string[] = e =>
-  Object.keys(e).filter(key => isNaN(Number(key)));
-
-const color = position => {
-  const combos = ringside.positions().map(p => JSON.stringify(p));
-  const hash = combos.indexOf(JSON.stringify(position)) / combos.length;
-
-  return interpolateRainbow(hash);
-};
-
-const Stories = storiesOf('Ringside', module).addDecorator(withKnobs);
-
-Stories.add('Ringside', () => {
-  const sizeOptions = {
-    range: true,
-    min: 0,
-    max: 1000,
-    step: 1,
-  };
-
-  const padding = 20;
+Stories.add('All positions', () => {
   const boxHeight = number('Height', 40, sizeOptions);
   const boxWidth = number('Width', 50, sizeOptions);
   const outerX = number('Outer X', 0, sizeOptions);
@@ -54,7 +34,7 @@ Stories.add('Ringside', () => {
     width: innerWidth,
   };
 
-  ringside = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
+  const ringside = new Ringside(innerBounds, outerBounds, boxHeight, boxWidth);
 
   const filters = { xAlign: {}, yAlign: {}, xBasis: {}, yBasis: {} } as any;
   enumKeys(XAlignment).forEach(key => {
@@ -114,7 +94,7 @@ Stories.add('Ringside', () => {
             y={pos.top}
             height={pos.height}
             width={pos.width}
-            fill={color(pos)}
+            fill={colorFor(ringside, pos)}
           >
             {`${JSON.stringify(pos)}`}
           </rect>
@@ -122,15 +102,9 @@ Stories.add('Ringside', () => {
     );
 
   return (
-    <svg
-      height={outerHeight + padding}
-      width={outerWidth + padding}
-      viewBox={`0 0 ${outerWidth + padding} ${outerHeight + padding}`}
-    >
-      <g>
-        {bounds}
-        {rects}
-      </g>
-    </svg>
+    <Canvas height={outerHeight} width={outerWidth}>
+      {bounds}
+      {rects}
+    </Canvas>
   );
 });

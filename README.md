@@ -54,6 +54,9 @@ For more examples, check the [examples repo](https://github.com/rylnd/ringside-e
 ## Development
 
 ```bash
+# use the Node version from .nvmrc
+nvm use
+
 # install packages
 npm install
 

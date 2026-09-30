@@ -5,9 +5,18 @@ import { withKnobs, number, boolean } from '@storybook/addon-knobs';
 
 import { Ringside } from '../src';
 import { XAlignment, YAlignment, XBasis, YBasis } from '../src/types';
-import { Canvas, colorFor, enumKeys, sizeOptions } from './helpers';
+import {
+  Canvas,
+  colorFor,
+  enumKeys,
+  sizeOptions,
+  Description,
+} from './helpers';
 
 const Stories = storiesOf('Usage/Explorer', module).addDecorator(withKnobs);
+
+const description =
+  'Every position a box of the given size can take around the target. The gray boxes are the inner bounds (the target) and the outer bounds (its container), and each color is a position that fits. Move the bounds with the knobs, or filter the positions by alignment and basis.';
 
 Stories.add('All positions', () => {
   const boxHeight = number('Height', 40, sizeOptions);
@@ -102,9 +111,12 @@ Stories.add('All positions', () => {
     );
 
   return (
-    <Canvas height={outerHeight} width={outerWidth}>
-      {bounds}
-      {rects}
-    </Canvas>
+    <React.Fragment>
+      <Description>{description}</Description>
+      <Canvas height={outerHeight} width={outerWidth}>
+        {bounds}
+        {rects}
+      </Canvas>
+    </React.Fragment>
   );
 });

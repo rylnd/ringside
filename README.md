@@ -55,13 +55,7 @@ Every candidate position is colored below: the dark gray box is the target (inne
 
 ![Every position that fits around a target](docs/explorer.png)
 
-That's one of the stories in this repo's storybook, which demonstrates the different ways to use the library:
-
-- **Usage/Explorer**: every position for a target, with filters for alignment and basis
-- **Usage/Tooltip**: choosing one of the positions that fit, as in the usage example above
-- **API/Grid**: the basis lines derived from the inner and outer bounds
-- **API/Position**: aligning a rectangle around an origin
-- **API/Fitting**: `fitsInside` and `fitsOutside` on any two rectangles
+That's one of the stories in this repo's storybook, which demonstrates the different ways to use the library.
 
 To run it, from a clone of this repo:
 

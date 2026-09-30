@@ -51,11 +51,11 @@ const tooltipPosition = {
 
 ## Examples
 
-Every candidate position is colored below: the dark gray box is the target (inner bounds), the light gray area is its container (outer bounds), and each color is a position that would fit.
+Each candidate position is colored below: the dark gray box is the target (inner bounds), the light gray area is its container (outer bounds), and each color is a position that would fit.
 
 ![Every position that fits around a target](docs/explorer.png)
 
-That's one of the stories in this repo's storybook, which demonstrates the different ways to use the library.
+This repo's storybook documents the different ways to use this library.
 
 To run it, from a clone of this repo:
 

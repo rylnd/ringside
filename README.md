@@ -49,7 +49,11 @@ const tooltipPosition = {
 };
 ```
 
-For more examples, check the [examples repo](https://github.com/rylnd/ringside-examples).
+Every candidate position is colored below: the dark gray box is the target (inner bounds), the light gray area is its container (outer bounds), and each color is a position that would fit.
+
+![Every position that fits around a target](docs/explorer.png)
+
+For more examples, check the [examples repo](https://github.com/rylnd/ringside-examples), or run the storybook (see [Development](#development)).
 
 ## Development
 
@@ -66,3 +70,11 @@ npm run storybook
 # run tests
 npm test
 ```
+
+The storybook demonstrates the different ways to use the library:
+
+- **Usage/Explorer**: every position for a target, with filters for alignment and basis
+- **Usage/Tooltip**: choosing one of the positions that fit, as in the example above
+- **API/Grid**: the basis lines derived from the inner and outer bounds
+- **API/Position**: aligning a rectangle around an origin
+- **API/Fitting**: `fitsInside` and `fitsOutside` on any two rectangles

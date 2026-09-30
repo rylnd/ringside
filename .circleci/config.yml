@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
@@ -10,14 +10,19 @@ jobs:
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package-lock.json" }}
-          - v1-dependencies-
+          - v1-npm-{{ checksum "package-lock.json" }}
+          - v1-npm-
 
-      - run: npm install
+      - run: npm ci
 
       - save_cache:
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+            - ~/.npm
+          key: v1-npm-{{ checksum "package-lock.json" }}
 
       - run: npm run coverage -- --verbose
+
+workflows:
+  test:
+    jobs:
+      - build

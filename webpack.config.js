@@ -1,6 +1,9 @@
+const fs = require('fs');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+// both configs emit into dist/, so clean it once up front
+fs.rmSync(path.resolve(__dirname, 'dist'), { recursive: true, force: true });
 
 const commonConfig = {
   entry: './src/index.ts',
@@ -27,7 +30,6 @@ const commonConfig = {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin(['dist'])],
 };
 
 const nodeConfig = {

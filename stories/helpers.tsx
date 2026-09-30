@@ -29,6 +29,20 @@ export const colorFor = (ringside: Ringside, position: FittedPosition) => {
   return interpolateRainbow(hash);
 };
 
+export const Description = ({ children }: { children: React.ReactNode }) => (
+  <p
+    style={{
+      fontFamily: 'sans-serif',
+      fontSize: 14,
+      lineHeight: 1.4,
+      maxWidth: 600,
+      margin: '0 0 12px',
+    }}
+  >
+    {children}
+  </p>
+);
+
 interface CanvasProps {
   height: number;
   width: number;

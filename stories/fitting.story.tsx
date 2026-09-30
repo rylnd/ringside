@@ -4,15 +4,16 @@ import { storiesOf } from '@storybook/react';
 import { withKnobs, number } from '@storybook/addon-knobs';
 
 import { fitsInside, fitsOutside } from '../src';
-import { Canvas, RectShape, sizeOptions } from './helpers';
+import { Canvas, RectShape, sizeOptions, Description } from './helpers';
 
 const Stories = storiesOf('API/Fitting', module).addDecorator(withKnobs);
 
 const WIDTH = 600;
 const HEIGHT = 400;
 
-// fitsInside and fitsOutside are the checks Ringside uses to decide whether
-// a position fits, and can be used on their own with any two rectangles.
+const description =
+  'fitsInside and fitsOutside are the checks Ringside uses to decide whether a position fits, and they work on any two rectangles. The subject is green when it fits inside the container, blue when it lies entirely outside it, and red when it is neither, such as when it overlaps an edge.';
+
 Stories.add('Inside and outside', () => {
   const container = {
     left: number('Container X', 150, sizeOptions),
@@ -31,16 +32,19 @@ Stories.add('Inside and outside', () => {
   const outside = fitsOutside(subject, container);
 
   return (
-    <Canvas height={HEIGHT} width={WIDTH}>
-      <RectShape rect={container} fill="gray" fillOpacity={0.5} />
-      <RectShape
-        rect={subject}
-        fill={inside ? 'seagreen' : outside ? 'steelblue' : 'tomato'}
-        fillOpacity={0.7}
-      />
-      <text x={4} y={HEIGHT - 6}>
-        {`fitsInside: ${inside}, fitsOutside: ${outside}`}
-      </text>
-    </Canvas>
+    <React.Fragment>
+      <Description>{description}</Description>
+      <Canvas height={HEIGHT} width={WIDTH}>
+        <RectShape rect={container} fill="gray" fillOpacity={0.5} />
+        <RectShape
+          rect={subject}
+          fill={inside ? 'seagreen' : outside ? 'steelblue' : 'tomato'}
+          fillOpacity={0.7}
+        />
+        <text x={4} y={HEIGHT - 6}>
+          {`fitsInside: ${inside}, fitsOutside: ${outside}`}
+        </text>
+      </Canvas>
+    </React.Fragment>
   );
 });
